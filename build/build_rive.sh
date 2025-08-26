@@ -235,7 +235,7 @@ if [ ! -f "$PREMAKE_INSTALL_DIR/premake5" ]; then
     case "$HOST_MACHINE" in
         mac_arm64) make -f Bootstrap.mak osx PLATFORM=ARM ;;
         mac_x64) make -f Bootstrap.mak osx ;;
-        windows) ./Bootstrap.bat ;;
+        windows) cmd.exe /c Bootstrap.bat ;;
         *) make -f Bootstrap.mak linux ;;
     esac
     cp -r bin/release $PREMAKE_INSTALL_DIR

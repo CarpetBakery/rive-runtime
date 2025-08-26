@@ -246,34 +246,41 @@ spirv-binary: $(SPIRV_OUTPUTS_BINARY)
 ## d3d compilation.
 .PHONY: $(OUT)/d3d/render_atlas.frag.h
 
-D3D_OUTPUTS := \
-	 $(OUT)/d3d/root.sig.h \
-	 $(addprefix $(OUT)/, $(patsubst %.hlsl, %.vert.h, $(wildcard d3d/*.hlsl))) \
-	 $(addprefix $(OUT)/, $(patsubst %.hlsl, %.frag.h, $(wildcard d3d/*.hlsl))) \
-	 $(OUT)/d3d/render_atlas_stroke.frag.h\
-	 $(OUT)/d3d/render_atlas_fill.frag.h\
+# D3D_OUTPUTS := \
+# 	 $(OUT)/d3d/root.sig.h \
+# 	 $(addprefix $(OUT)/, $(patsubst %.hlsl, %.vert.h, $(wildcard d3d/*.hlsl))) \
+# 	 $(addprefix $(OUT)/, $(patsubst %.hlsl, %.frag.h, $(wildcard d3d/*.hlsl))) \
+# 	 $(OUT)/d3d/render_atlas_stroke.frag.h\
+# 	 $(OUT)/d3d/render_atlas_fill.frag.h\
 
-$(OUT)/d3d/%.vert.h: d3d/%.hlsl $(MINIFY_STAMP)
-	@mkdir -p $(OUT)/d3d
-	@fxc /D VERTEX /I $(OUT) /T vs_5_0 /Fh $@ $<
+# $(OUT)/d3d/%.vert.h: d3d/%.hlsl $(MINIFY_STAMP)
+# 	@mkdir -p $(OUT)/d3d
+# 	@fxc /D VERTEX /I $(OUT) /T vs_5_0 /Fh $@ $<
 
-$(OUT)/d3d/%.frag.h: d3d/%.hlsl $(MINIFY_STAMP)
-	@mkdir -p $(OUT)/d3d
-	@fxc /D FRAGMENT /I $(OUT) /T ps_5_0 /Fh $@ $<
+# $(OUT)/d3d/%.frag.h: d3d/%.hlsl $(MINIFY_STAMP)
+# 	@mkdir -p $(OUT)/d3d
+# 	@fxc /D FRAGMENT /I $(OUT) /T ps_5_0 /Fh $@ $<
 
-$(OUT)/d3d/render_atlas_stroke.frag.h: d3d/render_atlas.hlsl $(MINIFY_STAMP)
-	@mkdir -p $(OUT)/d3d
-	@fxc /D FRAGMENT /D ATLAS_FEATHERED_STROKE /I $(OUT) /T ps_5_0 /Fh $@ $<
+# $(OUT)/d3d/render_atlas_stroke.frag.h: d3d/render_atlas.hlsl $(MINIFY_STAMP)
+# 	@mkdir -p $(OUT)/d3d
+# 	@fxc /D FRAGMENT /D ATLAS_FEATHERED_STROKE /I $(OUT) /T ps_5_0 /Fh $@ $<
 
-$(OUT)/d3d/render_atlas_fill.frag.h: d3d/render_atlas.hlsl $(MINIFY_STAMP)
-	@mkdir -p $(OUT)/d3d
-	@fxc /D FRAGMENT /D ATLAS_FEATHERED_FILL /I $(OUT) /T ps_5_0 /Fh $@ $<
+# $(OUT)/d3d/render_atlas_fill.frag.h: d3d/render_atlas.hlsl $(MINIFY_STAMP)
+# 	@mkdir -p $(OUT)/d3d
+# 	@fxc /D FRAGMENT /D ATLAS_FEATHERED_FILL /I $(OUT) /T ps_5_0 /Fh $@ $<
 
-$(OUT)/d3d/root.sig.h: d3d/root.sig
-	@mkdir -p $(OUT)/d3d
-	@fxc /I $(OUT) /T rootsig_1_1 /E ROOT_SIG /Fh $@ $<
+# $(OUT)/d3d/root.sig.h: d3d/root.sig
+# 	@mkdir -p $(OUT)/d3d
+# 	@fxc /I $(OUT) /T rootsig_1_1 /E ROOT_SIG /Fh $@ $<
 
-d3d: $(D3D_OUTPUTS)
+# d3d: $(D3D_OUTPUTS)
+
+# Makefile is seemingly broken. Use temporary script to build these shaders with fxc
+d3d: $(MINIFY_STAMP)
+	echo ===================================================
+	echo "building shaders with build_shaders.bat"
+	cmd.exe /c build_shaders.bat
+
 
 ## Cleaning.
 clean:
