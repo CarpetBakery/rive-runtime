@@ -14,4 +14,4 @@
 
 @REM Things should compile, but path_fiddle will fail due to not being able to copy a .html file
 
-build_rive.bat release --toolset="msc" --with-rtti
+build_rive.bat release --toolset="msc" --with-rtti --no_rive_png --no_rive_jpeg --no_rive_webp
