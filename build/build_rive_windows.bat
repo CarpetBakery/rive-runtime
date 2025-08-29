@@ -6,6 +6,7 @@
 @REM $Env:Path += ";[absolute path to]\build"
 
 @REM Follow README instructions inside /renderer to build glfw:
+@REM NOTE: You'll need a way to run .sh files on windows... I'm working on it
 @REM pushd ../skia
 @REM sh ./make_glfw.sh
 @REM popd
