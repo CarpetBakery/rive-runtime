@@ -23,7 +23,8 @@ $(MINIFY_OUTPUTS): $(MINIFY_STAMP)
 	@test -f $@ || "$(MAKE)" $(AM_MAKEFLAGS) $(MINIFY_STAMP)
 
 $(MINIFY_STAMP): $(MINIFY_INPUTS) minify.py
-	python3 minify.py $(FLAGS) -o $(OUT) $(MINIFY_INPUTS)
+# 	python3 minify.py $(FLAGS) -o $(OUT) $(MINIFY_INPUTS)
+	python minify.py $(FLAGS) -o $(OUT) $(MINIFY_INPUTS)
 	@touch $(MINIFY_STAMP)
 
 
@@ -279,7 +280,8 @@ spirv-binary: $(SPIRV_OUTPUTS_BINARY)
 d3d: $(MINIFY_STAMP)
 	echo ===================================================
 	echo "building shaders with build_shaders.bat"
-	cmd.exe /c build_shaders.bat
+# 	cmd.exe /c build_shaders.bat
+	./build_shaders.bat
 
 
 ## Cleaning.
