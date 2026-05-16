@@ -27,7 +27,7 @@ $(MINIFY_OUTPUTS): $(MINIFY_STAMP)
 	@test -f $@ || "$(MAKE)" $(AM_MAKEFLAGS) $(MINIFY_STAMP)
 
 $(MINIFY_STAMP): $(MINIFY_INPUTS) minify.py
-	python3 minify.py $(FLAGS) -o $(OUT) $(MINIFY_INPUTS)
+	python minify.py $(FLAGS) -o $(OUT) $(MINIFY_INPUTS)
 	@touch $(MINIFY_STAMP)
 
 $(OUT)/.:
@@ -384,20 +384,26 @@ D3D_OUTPUTS := \
 	 $(OUT)/d3d/render_atlas_stroke.frag.h\
 	 $(OUT)/d3d/render_atlas_fill.frag.h\
 
-$(OUT)/d3d/%.vert.h: d3d/%.hlsl $(MINIFY_STAMP) | $(OUT)/d3d/.
-	@fxc /D VERTEX /I $(OUT) $(FXC_DEBUG_FLAG) /T vs_5_0 /Fh $@ $<
+# Thanks to https://github.com/rive-app/rive-runtime/issues/70
+$(OUT)/d3d/%.vert.h: d3d/%.hlsl $(MINIFY_STAMP)
+	@mkdir -p "$(OUT)/d3d"
+	fxc -nologo -D VERTEX   -I "$(OUT)" $(FXC_DEBUG_FLAG) -T vs_5_0 -Fh "$@" "$<"
 
-$(OUT)/d3d/%.frag.h: d3d/%.hlsl $(MINIFY_STAMP) | $(OUT)/d3d/.
-	@fxc /D FRAGMENT /I $(OUT) $(FXC_DEBUG_FLAG) /T ps_5_0 /Fh  $@ $<
+$(OUT)/d3d/%.frag.h: d3d/%.hlsl $(MINIFY_STAMP)
+	@mkdir -p "$(OUT)/d3d"
+	fxc -nologo -D FRAGMENT -I "$(OUT)" $(FXC_DEBUG_FLAG) -T ps_5_0 -Fh "$@" "$<"
 
-$(OUT)/d3d/render_atlas_stroke.frag.h: d3d/render_atlas.hlsl $(MINIFY_STAMP) | $(OUT)/d3d/.
-	@fxc /D FRAGMENT /D ATLAS_FEATHERED_STROKE $(FXC_DEBUG_FLAG)  /I $(OUT) /T ps_5_0 /Fh  $@ $<
+$(OUT)/d3d/render_atlas_stroke.frag.h: d3d/render_atlas.hlsl $(MINIFY_STAMP)
+	@mkdir -p "$(OUT)/d3d"
+	fxc -nologo -D FRAGMENT -D ATLAS_FEATHERED_STROKE $(FXC_DEBUG_FLAG) -I "$(OUT)" -T ps_5_0 -Fh "$@" "$<"
 
-$(OUT)/d3d/render_atlas_fill.frag.h: d3d/render_atlas.hlsl $(MINIFY_STAMP) | $(OUT)/d3d/.
-	@fxc /D FRAGMENT /D ATLAS_FEATHERED_FILL $(FXC_DEBUG_FLAG)  /I $(OUT) /T ps_5_0 /Fh  $@ $<
+$(OUT)/d3d/render_atlas_fill.frag.h: d3d/render_atlas.hlsl $(MINIFY_STAMP)
+	@mkdir -p "$(OUT)/d3d"
+	fxc -nologo -D FRAGMENT -D ATLAS_FEATHERED_FILL  $(FXC_DEBUG_FLAG) -I "$(OUT)" -T ps_5_0 -Fh "$@" "$<"
 
-$(OUT)/d3d/root.sig.h: d3d/root.sig | $(OUT)/d3d/.
-	@fxc /I $(OUT) /T rootsig_1_1 /E ROOT_SIG /Fh   $@ $<
+$(OUT)/d3d/root.sig.h: d3d/root.sig
+	@mkdir -p "$(OUT)/d3d"
+	fxc -nologo -I "$(OUT)" -T rootsig_1_1 -E ROOT_SIG -Fh "$@" "$<"
 
 d3d: $(D3D_OUTPUTS)
 
